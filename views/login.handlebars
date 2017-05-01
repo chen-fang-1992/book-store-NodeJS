@@ -1,15 +1,29 @@
 <!doctype html>
 <!-- body -->
 <div class="container">
-	<div class="row">
-		<div class="col-lg-10 col-lg-offset-1">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4 class="panel-title">User Login</h4>
-				</div>
-				<div class="panel-body">
-					<div class="row">
-					</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="panel-title">{{title}}</h4>
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-xs-4 col-xs-offset-4">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label>USERNAME</label>
+							<input name="username" type="text" class="form-control" placeholder="Username" tabindex="1">
+						</div>
+						<div class="form-group">
+							<label>PASSWORD</label>
+							<input name="password" type="password" class="form-control" placeholder="Enter your password" tabindex="2">
+						</div>
+						<div class="form-group alert alert-danger collapse">
+							<span>{{msg}}</span>
+						</div>
+						<div class="form-group">
+							<button type="submit" class="btn btn-lg btn-warning btn-block" tabindex="3">Log in</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>

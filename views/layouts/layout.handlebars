@@ -15,14 +15,20 @@
 			<div class="navbar-collapse collapse">
 				{{#each navbar}}
 				<ul class="nav navbar-nav">
-					<li class="{{mp}}"><a href="/main">Main Page</a></li>
-					<li class="{{as}}"><a href="/search">Advanced Search</a></li>
-					<li class="{{cu}}"><a href="/contact">Contact Us</a></li>
+					<li class="{{hp}}"><a href="/home" tabindex="-1">Home Page</a></li>
+					<li class="{{as}}"><a href="/search" tabindex="-1">Advanced Search</a></li>
+					<li class="{{cu}}"><a href="/contact" tabindex="-1">Contact Us</a></li>
 				</ul>
 				{{/each}}
 				<ul class="nav navbar-nav navbar-right">
-					<li class="{{ul}}"><a href="/login">User Login</a></li>
-					<li class="{{al}}"><a href="/admin">Admin Login</a></li>
+					{{#if user}}
+					<li><a href="/user/logout" tabindex="-1">Log Out</a></li>
+					{{else}}
+					{{#each navbar}}
+					<li class="{{ul}}"><a href="/login" tabindex="-1">User Login</a></li>
+					<li class="{{al}}"><a href="/admin" tabindex="-1">Admin Login</a></li>
+					{{/each}}
+					{{/if}}
 				</ul>
 			</div>
 		</div>
@@ -30,6 +36,8 @@
 	{{{body}}}
 	<script src="/javascripts/jquery.min.js"></script>
 	<script src="/javascripts/bootstrap.min.js"></script>
-	<script src="/javascripts/search.js"></script>
+	{{#if js}}
+	<script src="{{js}}"></script>
+	{{/if}}
 </body>
 </html>

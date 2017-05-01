@@ -1,41 +1,16 @@
-function dropDown(element) {
-	this.dropdown = element;
-	this.placeholder = this.dropdown.find(".placeholder");
-	this.options = this.dropdown.find("ul.dropdown-menu > li");
-	this.value = "0";
-	this.initEvents();
-}
-
-dropDown.prototype = {
-	initEvents: function() {
-		var obj = this;
-		obj.options.on("click", function() {
-			var opt = $(this);
-			obj.text = opt.find("a").text();
-			obj.value = opt.attr("value");
-			obj.placeholder.text(obj.text);
-		});
-	},
-	getText: function() {
-		return this.text;
-	},
-	getValue: function() {
-		return this.value;
-	}
-};
-
 $(document).ready(function() {
-	var dropdown = new dropDown($("#key"));
+	$("button:submit").click(function() {
+		var url = "/search/result";
+		var title = $("input[name='title']").val();
+		var author = $("input[name='author']").val();
+		var type = $("input[name='type']").val();
 
-	$("#submit").click(function() {
-		var url = "/result";
-		var key = dropdown.getValue();
-		var content = $("#content").val();
-		if (content == "") {
-			alert("Please input content...");
+		if (title == "" && author == "" && type == "") {
+			alert("Please input content ...");
 		} else {
-			url = url + "?key=" + key + "&content=" + content;
-			document.location.href = url;
+			$("form").attr("action", url);
+			$("form").attr("method", "GET");
+			$("form").submit();
 		}
 	});
 });
