@@ -32,6 +32,7 @@ router.get('/result', function(req, res) {
 				res.render('result', {
 					title: 'Search Result',
 					navbar: [{hp:'',as:'',cu:'',ul:'',al:''}],
+					js: '/javascripts/result.js',
 					books: books
 				});
 			}
@@ -50,11 +51,27 @@ router.get('/result', function(req, res) {
 				res.render('result', {
 					title: 'Search Result',
 					navbar: [{hp:'',as:'',cu:'',ul:'',al:''}],
+					js: '/javascripts/result.js',
 					books: books
 				});
 			}
 		});
 	}
+});
+
+router.get('/detail', function(req, res) {
+	var id = req.query.id;
+	book.findBookById(id, function(err, book) {
+		if (err) {
+			console.log('[error] - : ' + err);
+		} else {
+			res.render('detail', {
+				title: 'Details',
+				navbar: [{hp:'',as:'',cu:'',ul:'',al:''}],
+				book: book
+			});
+		}
+	});
 });
 
 module.exports = router;

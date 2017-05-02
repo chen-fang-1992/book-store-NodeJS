@@ -1,0 +1,18 @@
+table {
+	table-layout:fixed;
+}
+
+td {
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+}
+
+a {
+	outline:none;
+	-moz-outline:none;
+}
+
+div.panel a:hover {
+	text-decoration:none;
+}
