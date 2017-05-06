@@ -13,6 +13,7 @@ var flash = require('connect-flash');
 var home = require('./routes/home');
 var search = require('./routes/search');
 var user = require('./routes/user');
+var order = require('./routes/order');
 
 var app = express();
 
@@ -45,10 +46,19 @@ app.use(passport.session());
 // flash
 app.use(flash());
 
+app.use(function(req, res, next) {
+	res.locals.successMsg = req.flash('successMsg');
+	res.locals.failMsg = req.flash('failMsg');
+	res.locals.user = req.user;
+	res.locals.url = req.url;
+	next();
+});
+
 // route
 app.use('/', home);
 app.use('/search', search);
 app.use('/user', user);
+app.use('/order', order);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

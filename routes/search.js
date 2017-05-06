@@ -2,17 +2,11 @@ var express = require('express');
 var router = express.Router();
 var book = require('../models/book');
 
-router.use(function(req, res, next) {
-	res.locals.msg = req.flash('msg');
-	res.locals.user = req.user;
-	next();
-});
-
 /* GET search page */
 router.get('/', function(req, res) {
 	res.render('search', {
 		title: 'Advanced Search',
-		navbar: [{hp:'',as:'active',cu:'',ul:'',al:''}],
+		navbar: [{hp:'',as:'active',cu:'',sc:'',ru:'',ul:'',al:''}],
 		js: '/javascripts/search.js'
 	});
 });
@@ -27,11 +21,11 @@ router.get('/result', function(req, res) {
 				console.log('[error] - : ' + err);
 			} else {
 				if (!books[0]) {
-					res.locals.msg = 'Sorry, the book you are looking for is out of stock.';
+					res.locals.failMsg = 'Sorry, the book you are looking for is out of stock.';
 				}
 				res.render('result', {
 					title: 'Search Result',
-					navbar: [{hp:'',as:'',cu:'',ul:'',al:''}],
+					navbar: [{hp:'',as:'',cu:'',sc:'',ru:'',ul:'',al:''}],
 					js: '/javascripts/result.js',
 					books: books
 				});
@@ -46,11 +40,11 @@ router.get('/result', function(req, res) {
 				console.log('[error] - : ' + err);
 			} else {
 				if (!books[0]) {
-					res.locals.msg = 'Sorry, the book you are looking for is out of stock.';
+					res.locals.failMsg = 'Sorry, the book you are looking for is out of stock.';
 				}
 				res.render('result', {
 					title: 'Search Result',
-					navbar: [{hp:'',as:'',cu:'',ul:'',al:''}],
+					navbar: [{hp:'',as:'',cu:'',sc:'',ru:'',ul:'',al:''}],
 					js: '/javascripts/result.js',
 					books: books
 				});
@@ -60,14 +54,15 @@ router.get('/result', function(req, res) {
 });
 
 router.get('/detail', function(req, res) {
-	var id = req.query.id;
-	book.findBookById(id, function(err, book) {
+	var bid = req.query.bid;
+	book.findBookById(bid, function(err, book) {
 		if (err) {
 			console.log('[error] - : ' + err);
 		} else {
 			res.render('detail', {
 				title: 'Details',
-				navbar: [{hp:'',as:'',cu:'',ul:'',al:''}],
+				navbar: [{hp:'',as:'',cu:'',sc:'',ru:'',ul:'',al:''}],
+				js: '/javascripts/detail.js', 
 				book: book
 			});
 		}

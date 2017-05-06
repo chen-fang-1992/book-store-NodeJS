@@ -10,31 +10,22 @@
 			<thead>
 				<tr>
 					<th><a class="btn btn-lg btn-link btn-block">Title</a></th>
-					<th><a class="btn btn-lg btn-link btn-block">Author(s)</a></th>
-					<th><a class="btn btn-lg btn-link btn-block">Type</a></th>
+					<th><a class="btn btn-lg btn-link btn-block">Number</a></th>
+					<th><a class="btn btn-lg btn-link btn-block">Action</a></th>
 				</tr>
 			</thead>
 			<tbody>
 				{{#each books}}
 				<tr>
 					<td><a class="btn btn-link btn-block">{{title}}</a></td>
-					<td><a class="btn btn-link btn-block">{{authors}}</a></td>
-					<td><a class="btn btn-link btn-block">{{publication_type}}</a></td>
+					<td><input type="number" class="number form-control" value="{{number}}"></td>
+					<td><button class="btn btn-danger">Remove</button>
+						<button class="btn btn-success collapse">Confirm</button></td>
 					<input type="hidden" value="{{bid}}">
 				</tr>
 				{{/each}}
 			</tbody>
 		</table>
-		{{else}}
-		<div class="panel-body">
-			<div class="row">
-				<div class="col-xs-4 col-xs-offset-4">
-					<div class="alert alert-danger">
-						<span>{{failMsg}}</span>
-					</div>
-				</div>
-			</div>
-		</div>
 		{{/if}}
 	</div>
 </div>

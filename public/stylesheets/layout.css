@@ -2,17 +2,27 @@ table {
 	table-layout:fixed;
 }
 
-td {
-	overflow:hidden;
-	white-space:nowrap;
-	text-overflow:ellipsis;
-}
-
 a {
 	outline:none;
 	-moz-outline:none;
 }
 
+td a {
+	overflow:hidden;
+	text-overflow:ellipsis;
+	max-width:100%;
+}
+
 div.panel a:hover {
 	text-decoration:none;
+}
+
+td input.number {
+	max-width:50%;
+	margin-left:25%;
+}
+
+td button.btn-success, button.btn-danger {
+	width:20%;
+	margin-left:40%;
 }
