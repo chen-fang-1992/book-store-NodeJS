@@ -3,7 +3,7 @@ $(document).ready(function() {
 		$("div.alert-success").removeClass("hidden").slideDown();
 	}
 
-	$("button[text='Add Cart']").click(function() {
+	$("button.btn-success").click(function() {
 		var url = "/order/add";
 		var bid = $(this).parent().siblings("input:hidden").val();
 		$.StandardPost(url, {

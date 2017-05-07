@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var order = require('../models/order');
+var then = require('thenjs');
 
 /* POST add page */
 router.post('/add', isAuthenticated, function(req, res) {
@@ -8,7 +9,6 @@ router.post('/add', isAuthenticated, function(req, res) {
 	var bid = req.body.bid;
 	order.addCart(uid, bid, function(err) {
 		if (err) {
-			console.log('[error] - : ' + err);
 		} else {
 			req.flash('successMsg', 'Add cart successfully.');
 			res.redirect('/search/detail?bid='+bid);
@@ -21,7 +21,11 @@ router.post('/remove', isAuthenticated, function(req, res) {
 	var uid = req.user.uid;
 	var bid = req.body.bid;
 	order.removeCart(uid, bid, function(err) {
-		res.redirect('/user/cart');
+		if (err) {
+			console.log('[error] - : ' + err);
+		} else {
+			res.redirect('/user/cart');
+		}
 	});
 });
 
@@ -31,8 +35,32 @@ router.post('/update', isAuthenticated, function(req, res) {
 	var bid = req.body.bid;
 	var number = req.body.number;
 	order.updateCart(uid, bid, number, function(err) {
-		res.redirect('/user/cart');
+		if (err) {
+			console.log('[error] - : ' + err);
+		} else {
+			res.redirect('/user/cart');
+		}
 	});
+});
+
+/* POST checkout page */
+router.post('/checkout', isAuthenticated, function(req, res) {
+	var uid = req.user.uid;
+	var bids = req.body.bids.split(',');
+	then.series([
+		function() {
+			bids.forEach(function(bid) {
+				order.removeCart(uid, bid, function(err) {
+					if (err) {
+						console.log('[error] - : ' + err);
+					}
+				});
+			});
+		},
+		function() {
+			res.redirect('/user/cart');
+		}
+	]);
 });
 
 function isAuthenticated(req, res, next){

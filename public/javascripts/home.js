@@ -4,7 +4,7 @@ $(document).ready(function() {
 		$(".placeholder").text($(this).text());
 	});
 
-	$("button:submit").click(function() {
+	$("button.btn-success").click(function() {
 		var url = "/search/result";
 		var key = $(".placeholder").text();
 		var content = $("input").val();

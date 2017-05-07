@@ -25,6 +25,17 @@ $(document).ready(function() {
 			number: number
 		});
 	});
+
+	$("button.btn-primary").click(function() {
+		var url = "/order/checkout";
+		var bids = [];
+		$("input:hidden").each(function(key) {
+			bids[key] = $(this).val();
+		});
+		$.StandardPost(url, {
+			bids: bids
+		});
+	});
 });
 
 $.extend({
