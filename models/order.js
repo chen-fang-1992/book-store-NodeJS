@@ -34,4 +34,10 @@ Order.listCartByUid = function(uid, callback) {
 	});
 };
 
+Order.addRecord = function(uid, bid, action, callback) {
+	db.addRecord(uid, bid, action, function(err) {
+		callback(err);
+	});
+}
+
 module.exports = Order;

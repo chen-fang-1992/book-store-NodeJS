@@ -7,12 +7,22 @@ var then = require('thenjs');
 router.post('/add', isAuthenticated, function(req, res) {
 	var uid = req.user.uid;
 	var bid = req.body.bid;
-	order.addCart(uid, bid, function(err) {
-		if (err) {
-		} else {
-			req.flash('successMsg', 'Add cart successfully.');
-			res.redirect('/search/detail?bid='+bid);
-		}
+	then(function(defer) {
+		order.addRecord(uid, bid, "add", function(err) {
+			if (err) {
+				console.log('[error] - : ' + err);
+			}
+		});
+		defer();
+	}).then(function(defer) {
+		order.addCart(uid, bid, function(err) {
+			if (err) {
+				console.log('[error] - : ' + err);
+			} else {
+				req.flash('successMsg', 'Add cart successfully.');
+				res.redirect('/search/detail?bid='+bid);
+			}
+		});
 	});
 });
 
@@ -20,12 +30,20 @@ router.post('/add', isAuthenticated, function(req, res) {
 router.post('/remove', isAuthenticated, function(req, res) {
 	var uid = req.user.uid;
 	var bid = req.body.bid;
-	order.removeCart(uid, bid, function(err) {
-		if (err) {
-			console.log('[error] - : ' + err);
-		} else {
-			res.redirect('/user/cart');
-		}
+	then(function(defer) {
+		order.addRecord(uid, bid, "remove", function(err) {
+			if (err) {
+				console.log('[error] - : ' + err);
+			}
+		});
+		defer();
+	}).then(function(defer) {
+		order.removeCart(uid, bid, function(err) {
+			if (err) {
+			} else {
+				res.redirect('/user/cart');
+			}
+		});
 	});
 });
 
@@ -47,20 +65,27 @@ router.post('/update', isAuthenticated, function(req, res) {
 router.post('/checkout', isAuthenticated, function(req, res) {
 	var uid = req.user.uid;
 	var bids = req.body.bids.split(',');
-	then.series([
-		function() {
-			bids.forEach(function(bid) {
-				order.removeCart(uid, bid, function(err) {
-					if (err) {
-						console.log('[error] - : ' + err);
-					}
-				});
+	then(function(defer) {
+		bids.forEach(function(bid) {
+			order.removeCart(uid, bid, function(err) {
+				if (err) {
+					console.log('[error] - : ' + err);
+				}
 			});
-		},
-		function() {
-			res.redirect('/user/cart');
-		}
-	]);
+		});
+		defer();
+	}).then(function(defer) {
+		bids.forEach(function(bid) {
+			order.addRecord(uid, bid, "check", function(err) {
+				if (err) {
+					console.log('[error] - : ' + err);
+				}
+			});
+		});
+		defer();
+	}).then(function(defer) {
+		res.redirect('/user/cart');
+	});
 });
 
 function isAuthenticated(req, res, next){

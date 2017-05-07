@@ -19,6 +19,7 @@ const UPDATE_CART = "UPDATE CART SET NUMBER=? WHERE UID=? AND BID=?";
 const FIND_CART = "SELECT * FROM CART WHERE UID=? AND BID=?";
 const LIST_CART_BY_UID = "SELECT BOOKS.BID AS bid,BOOKS.TITLE AS title,CART.NUMBER AS number" +
 		" FROM CART LEFT JOIN BOOKS ON CART.UID=? AND CART.BID=BOOKS.BID";
+const ADD_RECORD = "INSERT INTO RECORD (UID,BID,ACTION) VALUES (?,?,?)";
 
 function DB() {
 	this.connection;
@@ -157,6 +158,14 @@ DB.listCartByUid = function(uid, callback) {
 	this.con();
 	this.connection.query(LIST_CART_BY_UID, uid, function(err, books) {
 		callback(err, books);
+	});
+	this.end();
+};
+
+DB.addRecord = function(uid, bid, action, callback) {
+	this.con();
+	this.connection.query(ADD_RECORD, [uid, bid, action], function(err) {
+		callback(err);
 	});
 	this.end();
 };
