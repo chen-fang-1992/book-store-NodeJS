@@ -15,7 +15,7 @@ router.get('/home', function(req, res) {
 		} else {
 			res.render('home', {
 				title: 'Home Page',
-				navbar: [{hp:'active',as:'',cu:'',mp:'',sc:'',ru:'',ul:'',al:''}],
+				navbar: [{hp:'active',as:'',cu:'',mp:'',sc:'',ru:'',ul:'',am:''}],
 				js: '/javascripts/home.js',
 				lbooks: books.slice(0,5),
 				mbooks: books.slice(5,10)
@@ -28,7 +28,7 @@ router.get('/home', function(req, res) {
 router.get('/contact', function(req, res) {
 	res.render('contact', {
 		title: 'Contact Us',
-		navbar: [{hp:'',as:'',cu:'active',mp:'',sc:'',ru:'',ul:'',al:''}]
+		navbar: [{hp:'',as:'',cu:'active',mp:'',sc:'',ru:'',ul:'',am:''}]
 	});
 });
 
@@ -36,7 +36,7 @@ router.get('/contact', function(req, res) {
 router.get('/register', isNotAuthenticated, function(req, res) {
 	res.render('register', {
 		title: 'User Register',
-		navbar: [{hp:'',as:'',cu:'',mp:'',sc:'',ru:'active',ul:'',al:''}],
+		navbar: [{hp:'',as:'',cu:'',mp:'',sc:'',ru:'active',ul:'',am:''}],
 		js: '/javascripts/register.js'
 	});
 });
@@ -45,16 +45,8 @@ router.get('/register', isNotAuthenticated, function(req, res) {
 router.get('/login', isNotAuthenticated, function(req, res) {
 	res.render('login', {
 		title: 'User Login',
-		navbar: [{hp:'',as:'',cu:'',mp:'',sc:'',ru:'',ul:'active',al:''}],
+		navbar: [{hp:'',as:'',cu:'',mp:'',sc:'',ru:'',ul:'active',am:''}],
 		js: '/javascripts/login.js'
-	});
-});
-
-/* GET admin page */
-router.get('/admin', isNotAuthenticated, function(req, res) {
-	res.render('admin', {
-		title: 'Admin Login',
-		navbar: [{hp:'',as:'',cu:'',mp:'',sc:'',ru:'',ul:'',al:'active'}]
 	});
 });
 

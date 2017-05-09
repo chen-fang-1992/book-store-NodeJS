@@ -8,17 +8,31 @@ var order = require('../models/order');
 /* GET user page */
 router.get('/', isAuthenticated, function(req, res) {
 	var uid = req.user.uid;
-	order.listRecordByUid(uid, function(err, books) {
-		if (err) {
-			console.log('[error] - : ' + err);
-		} else {
-			res.render('user', {
-				title: 'Welcome '+res.locals.user.username,
-				navbar: [{hp:'',as:'',cu:'',mp:'active',sc:'',ru:'',ul:'',al:''}],
-				js: '/javascripts/user.js',
-				books: books
-			});
-		}
+	if (user.role) {
+		order.listRecordByUid(uid, function(err, books) {
+			if (err) {
+				console.log('[error] - : ' + err);
+			} else {
+				res.render('user', {
+					title: 'Welcome '+req.user.username,
+					navbar: [{hp:'',as:'',cu:'',mp:'active',sc:'',ru:'',ul:'',am:''}],
+					js: '/javascripts/user.js',
+					books: books
+				});
+			}
+		});
+	} else {
+		req.flash('failMsg', 'You cannot access that page.');
+		res.redirect('/user/admin');
+	}
+});
+
+/* GET admin page */
+router.get('/admin', isAuthenticated, function(req, res) {
+	res.render('admin', {
+		title: 'Welcome '+req.user.username,
+		navbar: [{hp:'',as:'',cu:'',mp:'',sc:'',ru:'',ul:'',am:'active'}],
+		js: '/javascripts/user.js'
 	});
 });
 
@@ -34,7 +48,11 @@ router.post('/', isNotAuthenticated, function(req, res, next) {
 			} else {
 				req.logIn(user, function(err) {
 					if (err) return next(err);
-					res.redirect('/user');
+					if (user.role) {
+						res.redirect('/user');
+					} else {
+						res.redirect('/user/admin');
+					}
 				});
 			}
 		}
@@ -89,18 +107,23 @@ router.post('/register', isNotAuthenticated, function(req, res) {
 /* GET cart page */
 router.get('/cart', isAuthenticated, function(req, res) {
 	var uid = req.user.uid;
-	order.listCartByUid(uid, function(err, books) {
-		if (err) {
-			console.log('[error] - : ' + err);
-		} else {
-			res.render('cart', {
-				title: 'Shopping Cart',
-				navbar: [{hp:'',as:'',cu:'',mp:'',sc:'active',ru:'',ul:'',al:''}],
-				js: '/javascripts/cart.js',
-				books: books
-			});
-		}
-	});
+	if (user.role) {
+		order.listCartByUid(uid, function(err, books) {
+			if (err) {
+				console.log('[error] - : ' + err);
+			} else {
+				res.render('cart', {
+					title: 'Shopping Cart',
+					navbar: [{hp:'',as:'',cu:'',mp:'',sc:'active',ru:'',ul:'',am:''}],
+					js: '/javascripts/cart.js',
+					books: books
+				});
+			}
+		});
+	} else {
+		req.flash('failMsg', 'You cannot access that page.');
+		res.redirect('/user/admin');
+	}
 });
 
 /* GET logout page */

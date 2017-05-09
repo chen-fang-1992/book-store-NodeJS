@@ -19,7 +19,11 @@ var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.engine('handlebars', exphbs({ defaultLayout: 'layout' }));
+app.engine('handlebars', exphbs({
+	layoutsDir: 'views/layouts',
+	defaultLayout: 'layout',
+	partialsDir: 'views/partials'
+}));
 app.set('view engine', 'handlebars');
 
 // favicon

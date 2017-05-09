@@ -23,16 +23,21 @@
 				{{/each}}
 				<ul class="nav navbar-nav navbar-right">
 					{{#if user}}
+					{{#if user.role}}
 					{{#each navbar}}
 					<li class="{{mp}}"><a href="/user" tabindex="-1">My Profile</a></li>
 					<li class="{{sc}}"><a href="/user/cart" tabindex="-1">Shopping Cart</a></li>
-					<li><a href="/user/logout" tabindex="-1">Log Out</a></li>
 					{{/each}}
+					{{else}}
+					{{#each navbar}}
+					<li class="{{am}}"><a href="/user/admin" tabindex="-1">Management</a></li>
+					{{/each}}
+					{{/if}}
+					<li><a href="/user/logout" tabindex="-1">Log Out</a></li>
 					{{else}}
 					{{#each navbar}}
 					<li class="{{ru}}"><a href="/register" tabindex="-1">Register User</a></li>
 					<li class="{{ul}}"><a href="/login" tabindex="-1">User Login</a></li>
-					<li class="{{al}}"><a href="/admin" tabindex="-1">Admin Login</a></li>
 					{{/each}}
 					{{/if}}
 				</ul>
