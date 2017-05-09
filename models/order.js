@@ -38,6 +38,12 @@ Order.addRecord = function(uid, bid, action, callback) {
 	db.addRecord(uid, bid, action, function(err) {
 		callback(err);
 	});
-}
+};
+
+Order.listRecordByUid = function(uid, callback) {
+	db.listRecordByUid(uid, function(err, books) {
+		callback(err, books);
+	});
+};
 
 module.exports = Order;

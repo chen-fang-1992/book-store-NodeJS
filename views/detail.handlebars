@@ -19,14 +19,10 @@
 					<input type="hidden" value="{{book.bid}}">
 				</tr>
 				{{/if}}
-				{{#if successMsg}}
-				<tr><td>
-					<div class="alert alert-success collapse col-xs-4">
-						<span>{{successMsg}}</span>
-					</div>
-				</td></tr>
-				{{/if}}
 			</tbody>
 		</table>
+	</div>
+	<div class="alert alert-success collapse col-xs-4 col-xs-offset-4">
+		<span>{{successMsg}}</span>
 	</div>
 </div>

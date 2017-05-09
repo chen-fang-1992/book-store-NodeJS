@@ -6,15 +6,24 @@ var user = require('../models/user');
 var order = require('../models/order');
 
 /* GET user page */
-router.get('/', function(req, res) {
-	res.render('user', {
-		title: 'Welcome '+res.locals.user.username,
-		navbar: [{mp:'',as:'',cu:'',sc:'',ru:'',ul:'',al:''}]
+router.get('/', isAuthenticated, function(req, res) {
+	var uid = req.user.uid;
+	order.listRecordByUid(uid, function(err, books) {
+		if (err) {
+			console.log('[error] - : ' + err);
+		} else {
+			res.render('user', {
+				title: 'Welcome '+res.locals.user.username,
+				navbar: [{hp:'',as:'',cu:'',mp:'active',sc:'',ru:'',ul:'',al:''}],
+				js: '/javascripts/user.js',
+				books: books
+			});
+		}
 	});
 });
 
 /* POST user page */
-router.post('/', function(req, res, next) {
+router.post('/', isNotAuthenticated, function(req, res, next) {
 	passport.authenticate('local', function(err, user) {
 		if (err) {
 			console.log('[error] - : ' + err);
@@ -58,7 +67,7 @@ passport.deserializeUser(function(uid, callback) {
 });
 
 /* POST register page */
-router.post('/register', function(req, res) {
+router.post('/register', isNotAuthenticated, function(req, res) {
 	var username = req.body.username;
 	var password = req.body.password;
 	var email = req.body.email;
@@ -86,7 +95,7 @@ router.get('/cart', isAuthenticated, function(req, res) {
 		} else {
 			res.render('cart', {
 				title: 'Shopping Cart',
-				navbar: [{mp:'',as:'',cu:'',sc:'active',ru:'',ul:'',al:''}],
+				navbar: [{hp:'',as:'',cu:'',mp:'',sc:'active',ru:'',ul:'',al:''}],
 				js: '/javascripts/cart.js',
 				books: books
 			});
@@ -95,7 +104,7 @@ router.get('/cart', isAuthenticated, function(req, res) {
 });
 
 /* GET logout page */
-router.get('/logout', function(req, res) {
+router.get('/logout', isAuthenticated, function(req, res) {
 	req.logOut();
 	res.redirect('/');
 });
@@ -106,6 +115,15 @@ function isAuthenticated(req, res, next){
 	} else {
 		req.flash('failMsg','Sorry, you are not logged in.');
 		res.redirect('/login');
+	}
+}
+
+function isNotAuthenticated(req, res, next){
+	if(!req.isAuthenticated()){
+		return next();
+	} else {
+		req.flash('failMsg','Sorry, you are not logged out.');
+		res.redirect('/user');
 	}
 }
 

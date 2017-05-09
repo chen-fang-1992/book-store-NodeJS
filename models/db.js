@@ -18,8 +18,11 @@ const REMOVE_CART = "DELETE FROM CART WHERE UID=? AND BID=?";
 const UPDATE_CART = "UPDATE CART SET NUMBER=? WHERE UID=? AND BID=?";
 const FIND_CART = "SELECT * FROM CART WHERE UID=? AND BID=?";
 const LIST_CART_BY_UID = "SELECT BOOKS.BID AS bid,BOOKS.TITLE AS title,CART.NUMBER AS number" +
-		" FROM CART LEFT JOIN BOOKS ON CART.UID=? AND CART.BID=BOOKS.BID";
+		" FROM CART LEFT JOIN BOOKS ON  CART.BID=BOOKS.BID AND CART.UID=?";
 const ADD_RECORD = "INSERT INTO RECORD (UID,BID,ACTION) VALUES (?,?,?)";
+const LIST_RECORD_BY_UID = "SELECT BOOKS.BID AS bid,BOOKS.TITLE AS title,RECORD.ACTION AS action," +
+		"DATE_FORMAT(RECORD.TIMESTAMP,'%Y-%m-%d %H:%i:%s') AS time FROM RECORD LEFT JOIN BOOKS ON" +
+		" RECORD.BID=BOOKS.BID AND RECORD.UID=? ORDER BY RID DESC LIMIT 5";
 
 function DB() {
 	this.connection;
@@ -166,6 +169,14 @@ DB.addRecord = function(uid, bid, action, callback) {
 	this.con();
 	this.connection.query(ADD_RECORD, [uid, bid, action], function(err) {
 		callback(err);
+	});
+	this.end();
+};
+
+DB.listRecordByUid = function(uid, callback) {
+	this.con();
+	this.connection.query(LIST_RECORD_BY_UID, uid, function(err, books) {
+		callback(err, books);
 	});
 	this.end();
 };

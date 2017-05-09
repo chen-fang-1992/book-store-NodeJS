@@ -6,7 +6,7 @@ var book = require('../models/book');
 router.get('/', function(req, res) {
 	res.render('search', {
 		title: 'Advanced Search',
-		navbar: [{hp:'',as:'active',cu:'',sc:'',ru:'',ul:'',al:''}],
+		navbar: [{hp:'',as:'active',cu:'',mp:'',sc:'',ru:'',ul:'',al:''}],
 		js: '/javascripts/search.js'
 	});
 });
@@ -25,7 +25,7 @@ router.get('/result', function(req, res) {
 				}
 				res.render('result', {
 					title: 'Search Result',
-					navbar: [{hp:'',as:'',cu:'',sc:'',ru:'',ul:'',al:''}],
+					navbar: [{hp:'',as:'',cu:'',mp:'',sc:'',ru:'',ul:'',al:''}],
 					js: '/javascripts/result.js',
 					books: books
 				});
@@ -44,7 +44,7 @@ router.get('/result', function(req, res) {
 				}
 				res.render('result', {
 					title: 'Search Result',
-					navbar: [{hp:'',as:'',cu:'',sc:'',ru:'',ul:'',al:''}],
+					navbar: [{hp:'',as:'',cu:'',mp:'',sc:'',ru:'',ul:'',al:''}],
 					js: '/javascripts/result.js',
 					books: books
 				});
@@ -61,7 +61,7 @@ router.get('/detail', function(req, res) {
 		} else {
 			res.render('detail', {
 				title: 'Details',
-				navbar: [{hp:'',as:'',cu:'',sc:'',ru:'',ul:'',al:''}],
+				navbar: [{hp:'',as:'',cu:'',mp:'',sc:'',ru:'',ul:'',al:''}],
 				js: '/javascripts/detail.js', 
 				book: book
 			});

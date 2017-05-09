@@ -15,7 +15,7 @@ router.get('/home', function(req, res) {
 		} else {
 			res.render('home', {
 				title: 'Home Page',
-				navbar: [{hp:'active',as:'',cu:'',sc:'',ru:'',ul:'',al:''}],
+				navbar: [{hp:'active',as:'',cu:'',mp:'',sc:'',ru:'',ul:'',al:''}],
 				js: '/javascripts/home.js',
 				lbooks: books.slice(0,5),
 				mbooks: books.slice(5,10)
@@ -28,34 +28,52 @@ router.get('/home', function(req, res) {
 router.get('/contact', function(req, res) {
 	res.render('contact', {
 		title: 'Contact Us',
-		navbar: [{hp:'',as:'',cu:'active',sc:'',ru:'',ul:'',al:''}]
+		navbar: [{hp:'',as:'',cu:'active',mp:'',sc:'',ru:'',ul:'',al:''}]
 	});
 });
 
 /* GET register page */
-router.get('/register', function(req, res) {
+router.get('/register', isNotAuthenticated, function(req, res) {
 	res.render('register', {
 		title: 'User Register',
-		navbar: [{hp:'',as:'',cu:'',sc:'',ru:'active',ul:'',al:''}],
+		navbar: [{hp:'',as:'',cu:'',mp:'',sc:'',ru:'active',ul:'',al:''}],
 		js: '/javascripts/register.js'
 	});
 });
 
 /* GET login page */
-router.get('/login', function(req, res) {
+router.get('/login', isNotAuthenticated, function(req, res) {
 	res.render('login', {
 		title: 'User Login',
-		navbar: [{hp:'',as:'',cu:'',sc:'',ru:'',ul:'active',al:''}],
+		navbar: [{hp:'',as:'',cu:'',mp:'',sc:'',ru:'',ul:'active',al:''}],
 		js: '/javascripts/login.js'
 	});
 });
 
 /* GET admin page */
-router.get('/admin', function(req, res) {
+router.get('/admin', isNotAuthenticated, function(req, res) {
 	res.render('admin', {
 		title: 'Admin Login',
-		navbar: [{hp:'',as:'',cu:'',sc:'',ru:'',ul:'',al:'active'}]
+		navbar: [{hp:'',as:'',cu:'',mp:'',sc:'',ru:'',ul:'',al:'active'}]
 	});
 });
+
+function isAuthenticated(req, res, next){
+	if(req.isAuthenticated()){
+		return next();
+	} else {
+		req.flash('failMsg','Sorry, you are not logged in.');
+		res.redirect('/login');
+	}
+}
+
+function isNotAuthenticated(req, res, next){
+	if(!req.isAuthenticated()){
+		return next();
+	} else {
+		req.flash('failMsg','Sorry, you are not logged out.');
+		res.redirect('/user');
+	}
+}
 
 module.exports = router;
