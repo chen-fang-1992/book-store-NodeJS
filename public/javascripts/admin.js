@@ -19,7 +19,16 @@ $(document).ready(function() {
 		}
 	});
 
-	$("li.previous").click(function() {
+	$("#first").click(function() {
+		var url = "/user/record";
+		var key = $("#key").val();
+		var content = $("#content").val();
+		var page = 1;
+		url = url + "?key=" + key + "&content=" + content + "&page=" + page;
+		document.location.href = url;
+	});
+
+	$("#previous").click(function() {
 		var url = "/user/record";
 		var key = $("#key").val();
 		var content = $("#content").val();
@@ -32,7 +41,7 @@ $(document).ready(function() {
 		document.location.href = url;
 	});
 
-	$("li.next").click(function() {
+	$("#next").click(function() {
 		var url = "/user/record";
 		var key = $("#key").val();
 		var content = $("#content").val();
@@ -41,6 +50,15 @@ $(document).ready(function() {
 		} else {
 			var page = Number($("#page").val()) + 1;
 		}
+		url = url + "?key=" + key + "&content=" + content + "&page=" + page;
+		document.location.href = url;
+	});
+
+	$("#last").click(function() {
+		var url = "/user/record";
+		var key = $("#key").val();
+		var content = $("#content").val();
+		var page = Number($("#pages").val());
 		url = url + "?key=" + key + "&content=" + content + "&page=" + page;
 		document.location.href = url;
 	});

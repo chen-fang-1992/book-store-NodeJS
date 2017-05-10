@@ -6,7 +6,17 @@ $(document).ready(function() {
 		document.location.href = url;
 	});
 
-	$("li.previous").click(function() {
+	$("#first").click(function() {
+		var url = "/search/result";
+		var btitle = $("#btitle").val();
+		var author = $("#author").val();
+		var type = $("#type").val();
+		var page = 1;
+		url = url + "?btitle=" + btitle + "&author=" + author + "&type=" + type + "&page=" + page;
+		document.location.href = url;
+	});
+
+	$("#previous").click(function() {
 		var url = "/search/result";
 		var btitle = $("#btitle").val();
 		var author = $("#author").val();
@@ -20,7 +30,7 @@ $(document).ready(function() {
 		document.location.href = url;
 	});
 
-	$("li.next").click(function() {
+	$("#next").click(function() {
 		var url = "/search/result";
 		var btitle = $("#btitle").val();
 		var author = $("#author").val();
@@ -30,6 +40,16 @@ $(document).ready(function() {
 		} else {
 			var page = Number($("#page").val()) + 1;
 		}
+		url = url + "?btitle=" + btitle + "&author=" + author + "&type=" + type + "&page=" + page;
+		document.location.href = url;
+	});
+
+	$("#last").click(function() {
+		var url = "/search/result";
+		var btitle = $("#btitle").val();
+		var author = $("#author").val();
+		var type = $("#type").val();
+		var page = Number($("#pages").val());
 		url = url + "?btitle=" + btitle + "&author=" + author + "&type=" + type + "&page=" + page;
 		document.location.href = url;
 	});
