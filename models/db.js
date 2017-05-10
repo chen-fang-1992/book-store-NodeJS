@@ -22,7 +22,13 @@ const LIST_CART_BY_UID = "SELECT BOOKS.BID AS bid,BOOKS.TITLE AS title,CART.NUMB
 const ADD_RECORD = "INSERT INTO RECORD (UID,BID,ACTION) VALUES (?,?,?)";
 const LIST_RECORD_BY_UID = "SELECT BOOKS.BID AS bid,BOOKS.TITLE AS title,RECORD.ACTION AS action," +
 		"DATE_FORMAT(RECORD.TIMESTAMP,'%Y-%m-%d %H:%i:%s') AS time FROM RECORD LEFT JOIN BOOKS ON" +
-		" RECORD.BID=BOOKS.BID AND RECORD.UID=? ORDER BY RID DESC LIMIT 5";
+		" RECORD.BID=BOOKS.BID WHERE RECORD.UID=? ORDER BY RECORD.RID DESC LIMIT 5";
+const LIST_RECORD_BY_USERNAME = "SELECT USERS.USERNAME AS username,BOOKS.TITLE AS title,RECORD.ACTION AS action," +
+		"DATE_FORMAT(RECORD.TIMESTAMP,'%Y-%m-%d %H:%i:%s') AS time FROM RECORD LEFT JOIN USERS ON RECORD.UID=USERS.UID" +
+		" LEFT JOIN BOOKS ON RECORD.BID=BOOKS.BID WHERE USERS.USERNAME=? ORDER BY RECORD.RID DESC LIMIT 5";
+const LIST_RECORD_BY_TITLE = "SELECT USERS.USERNAME AS username,BOOKS.TITLE AS title,RECORD.ACTION AS action," +
+		"DATE_FORMAT(RECORD.TIMESTAMP,'%Y-%m-%d %H:%i:%s') AS time FROM RECORD LEFT JOIN USERS ON RECORD.UID=USERS.UID" +
+		" LEFT JOIN BOOKS ON RECORD.BID=BOOKS.BID WHERE BOOKS.TITLE LIKE CONCAT('%',?,'%') ORDER BY RECORD.RID DESC LIMIT 5";
 
 function DB() {
 	this.connection;
@@ -175,9 +181,26 @@ DB.addRecord = function(uid, bid, action, callback) {
 
 DB.listRecordByUid = function(uid, callback) {
 	this.con();
-	this.connection.query(LIST_RECORD_BY_UID, uid, function(err, books) {
-		callback(err, books);
+	this.connection.query(LIST_RECORD_BY_UID, uid, function(err, records) {
+		callback(err, records);
 	});
+	this.end();
+};
+
+DB.listRecordFromAdmin = function(key, content, callback) {
+	this.con();
+	switch (key) {
+		case "User Name":
+			this.connection.query(LIST_RECORD_BY_USERNAME, content, function(err, records) {
+				callback(err, records);
+			});
+			break;
+		case "Book Title":
+			this.connection.query(LIST_RECORD_BY_TITLE, content, function(err, records) {
+				callback(err, records);
+			});
+			break;
+	}
 	this.end();
 };
 

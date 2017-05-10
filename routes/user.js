@@ -8,8 +8,8 @@ var order = require('../models/order');
 /* GET user page */
 router.get('/', isAuthenticated, function(req, res) {
 	var uid = req.user.uid;
-	if (user.role) {
-		order.listRecordByUid(uid, function(err, books) {
+	if (req.user.role) {
+		order.listRecordByUid(uid, function(err, records) {
 			if (err) {
 				console.log('[error] - : ' + err);
 			} else {
@@ -17,7 +17,7 @@ router.get('/', isAuthenticated, function(req, res) {
 					title: 'Welcome '+req.user.username,
 					navbar: [{hp:'',as:'',cu:'',mp:'active',sc:'',ru:'',ul:'',am:''}],
 					js: '/javascripts/user.js',
-					books: books
+					records: records
 				});
 			}
 		});
@@ -25,15 +25,6 @@ router.get('/', isAuthenticated, function(req, res) {
 		req.flash('failMsg', 'You cannot access that page.');
 		res.redirect('/user/admin');
 	}
-});
-
-/* GET admin page */
-router.get('/admin', isAuthenticated, function(req, res) {
-	res.render('admin', {
-		title: 'Welcome '+req.user.username,
-		navbar: [{hp:'',as:'',cu:'',mp:'',sc:'',ru:'',ul:'',am:'active'}],
-		js: '/javascripts/user.js'
-	});
 });
 
 /* POST user page */
@@ -107,7 +98,7 @@ router.post('/register', isNotAuthenticated, function(req, res) {
 /* GET cart page */
 router.get('/cart', isAuthenticated, function(req, res) {
 	var uid = req.user.uid;
-	if (user.role) {
+	if (req.user.role) {
 		order.listCartByUid(uid, function(err, books) {
 			if (err) {
 				console.log('[error] - : ' + err);
@@ -123,6 +114,43 @@ router.get('/cart', isAuthenticated, function(req, res) {
 	} else {
 		req.flash('failMsg', 'You cannot access that page.');
 		res.redirect('/user/admin');
+	}
+});
+
+/* GET admin page */
+router.get('/admin', isAuthenticated, function(req, res) {
+	if (!req.user.role) {
+		res.render('admin', {
+			title: 'Welcome '+req.user.username,
+			navbar: [{hp:'',as:'',cu:'',mp:'',sc:'',ru:'',ul:'',am:'active'}],
+			js: '/javascripts/admin.js'
+		});
+	} else {
+		req.flash('failMsg', 'You cannot access that page.');
+		res.redirect('/user');
+	}
+});
+
+/* GET user record page */
+router.get('/record', isAuthenticated, function(req, res) {
+	if (!req.user.role) {
+		var key = req.query.key;
+		var content = req.query.content;
+		order.listRecordFromAdmin(key, content, function(err, records) {
+			if (err) {
+				console.log('[error] - : ' + err);
+			} else {
+				res.render('admin', {
+					title: 'Welcome '+req.user.username,
+					navbar: [{hp:'',as:'',cu:'',mp:'',sc:'',ru:'',ul:'',am:'active'}],
+					js: '/javascripts/admin.js',
+					records: records
+				});
+			}
+		});
+	} else {
+		req.flash('failMsg', 'You cannot access that page.');
+		res.redirect('/user');
 	}
 });
 

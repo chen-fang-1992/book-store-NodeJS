@@ -41,9 +41,15 @@ Order.addRecord = function(uid, bid, action, callback) {
 };
 
 Order.listRecordByUid = function(uid, callback) {
-	db.listRecordByUid(uid, function(err, books) {
-		callback(err, books);
+	db.listRecordByUid(uid, function(err, records) {
+		callback(err, records);
 	});
 };
+
+Order.listRecordFromAdmin = function(key, content, callback) {
+	db.listRecordFromAdmin(key, content, function(err, records) {
+		callback(err, records);
+	});
+}
 
 module.exports = Order;

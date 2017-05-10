@@ -5,7 +5,7 @@
 		<div class="panel-heading">
 			<h4 class="panel-title">My recent 5 records</h4>
 		</div>
-		{{#if books}}
+		{{#if records}}
 		<table class="table table-striped table-hover table-condensed">
 			<thead>
 				<tr>
@@ -15,7 +15,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{{#each books}}
+				{{#each records}}
 				<tr>
 					<td><a class="btn btn-link btn-block">{{title}}</a></td>
 					<td><a class="btn btn-link btn-block">{{action}}</a></td>
