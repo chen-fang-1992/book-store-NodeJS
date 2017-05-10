@@ -79,7 +79,11 @@ app.use(function(err, req, res, next) {
 
 	// render the error page
 	res.status(err.status || 500);
-	res.render('error');
+	res.locals.failMsg = 'Sorry, the page you are looking for is not exist.';
+	res.render('error', {
+		title: 'Error',
+		navbar: [{hp:'',as:'',cu:'',mp:'',sc:'',ru:'',ul:'',am:''}]
+	});
 });
 
 module.exports = app;
