@@ -28,8 +28,14 @@ Order.updateCart = function(uid, bid, number, callback) {
 	})
 };
 
-Order.listCartByUid = function(uid, callback) {
-	db.listCartByUid(uid, function(err, books) {
+Order.countCartByUid = function(uid, callback) {
+	db.countCartByUid(uid, function(err, num) {
+		callback(err, num);
+	});
+};
+
+Order.listCartByUid = function(uid, page, callback) {
+	db.listCartByUid(uid, page, function(err, books) {
 		callback(err, books);
 	});
 };
@@ -40,16 +46,28 @@ Order.addRecord = function(uid, bid, action, callback) {
 	});
 };
 
-Order.listRecordByUid = function(uid, callback) {
-	db.listRecordByUid(uid, function(err, records) {
+Order.countRecordByUid = function(uid, callback) {
+	db.countRecordByUid(uid, function(err, num) {
+		callback(err, num);
+	});
+};
+
+Order.listRecordByUid = function(uid, page, callback) {
+	db.listRecordByUid(uid, page, function(err, records) {
 		callback(err, records);
 	});
 };
 
-Order.listRecordFromAdmin = function(key, content, callback) {
-	db.listRecordFromAdmin(key, content, function(err, records) {
+Order.countRecordFromAdmin = function(key, content, callback) {
+	db.countRecordFromAdmin(key, content, function(err, records) {
 		callback(err, records);
 	});
-}
+};
+
+Order.listRecordFromAdmin = function(key, content, page, callback) {
+	db.listRecordFromAdmin(key, content, page, function(err, records) {
+		callback(err, records);
+	});
+};
 
 module.exports = Order;

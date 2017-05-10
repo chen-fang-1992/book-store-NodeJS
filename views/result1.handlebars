@@ -10,25 +10,33 @@
 			<thead>
 				<tr>
 					<th><a class="btn btn-lg btn-link btn-block">Title</a></th>
-					<th><a class="btn btn-lg btn-link btn-block">Number</a></th>
-					<th><a class="btn btn-lg btn-link btn-block">Action</a></th>
+					<th><a class="btn btn-lg btn-link btn-block">Author(s)</a></th>
+					<th><a class="btn btn-lg btn-link btn-block">Type</a></th>
 				</tr>
 			</thead>
 			<tbody>
 				{{#each books}}
 				<tr>
 					<td><a class="btn btn-link btn-block">{{title}}</a></td>
-					<td><input type="number" class="number form-control" value="{{number}}"></td>
-					<td><button type="button" class="btn btn-danger">Remove</button>
-						<button type="button" class="btn btn-success collapse">Confirm</button></td>
+					<td><a class="btn btn-link btn-block">{{authors}}</a></td>
+					<td><a class="btn btn-link btn-block">{{publication_type}}</a></td>
 					<input type="hidden" value="{{bid}}">
 				</tr>
 				{{/each}}
 			</tbody>
 		</table>
 		{{>pager}}
+		<input id="key" type="hidden" value="{{key}}">
+		<input id="content" type="hidden" value="{{content}}">
+		{{else}}
 		<div class="panel-body">
-			<button class="btn btn-primary col-xs-2 col-xs-offset-5">Check Out</button>
+			<div class="row">
+				<div class="col-xs-4 col-xs-offset-4">
+					<div class="alert alert-danger">
+						<span>{{failMsg}}</span>
+					</div>
+				</div>
+			</div>
 		</div>
 		{{/if}}
 	</div>

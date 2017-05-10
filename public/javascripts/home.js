@@ -10,7 +10,7 @@ $(document).ready(function() {
 		if (content == "") {
 			alert("Please input content ...");
 		} else {
-			url = url + "?key=" + key + "&content=" + content;
+			url = url + "?key=" + key + "&content=" + content + "&page=1";
 			document.location.href = url;
 		}
 	});

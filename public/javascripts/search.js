@@ -1,11 +1,11 @@
 $(document).ready(function() {
 	$("button:submit").click(function() {
 		var url = "/search/result";
-		var title = $("input[name='title']").val();
+		var btitle = $("input[name='btitle']").val();
 		var author = $("input[name='author']").val();
 		var type = $("input[name='type']").val();
 
-		if (title == "" && author == "" && type == "") {
+		if (btitle == "" && author == "" && type == "") {
 			alert("Please input content ...");
 		} else {
 			$("form").attr("action", url);

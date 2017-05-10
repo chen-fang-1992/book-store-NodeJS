@@ -9,7 +9,7 @@ router.get('/', function(req, res) {
 
 /* GET main page */
 router.get('/home', function(req, res) {
-	book.findBookByRecommend(function(err, books) {
+	book.listBookByRecommend(function(err, books) {
 		if (err) {
 			console.log('[error] - : ' + err);
 		} else {

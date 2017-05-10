@@ -4,22 +4,41 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var user = require('../models/user');
 var order = require('../models/order');
+var then = require('thenjs');
 
 /* GET user page */
 router.get('/', isAuthenticated, function(req, res) {
 	var uid = req.user.uid;
 	if (req.user.role) {
-		order.listRecordByUid(uid, function(err, records) {
-			if (err) {
-				console.log('[error] - : ' + err);
-			} else {
-				res.render('user', {
-					title: 'Welcome '+req.user.username,
-					navbar: [{hp:'',as:'',cu:'',mp:'active',sc:'',ru:'',ul:'',am:''}],
-					js: '/javascripts/user.js',
-					records: records
-				});
+		if (!req.query.page) {
+			var page = 1;
+		} else {
+			var page = req.query.page;
+		}
+		then(function(defer) {
+			order.countRecordByUid(uid, function(err, pages) {
+				defer(err, pages);
+			});
+		}).then(function(defer, pages) {
+			if (page < 1) {
+				page = 1;
+			} else if (page > pages && pages != 0) {
+				page = pages;
 			}
+			order.listRecordByUid(uid, page, function(err, records) {
+				if (err) {
+					console.log('[error] - : ' + err);
+				} else {
+					res.render('user', {
+						title: 'Welcome '+req.user.username,
+						navbar: [{hp:'',as:'',cu:'',mp:'active',sc:'',ru:'',ul:'',am:''}],
+						js: '/javascripts/user.js',
+						records: records,
+						pages: pages,
+						page: page
+					});
+				}
+			});
 		});
 	} else {
 		req.flash('failMsg', 'You cannot access that page.');
@@ -99,17 +118,35 @@ router.post('/register', isNotAuthenticated, function(req, res) {
 router.get('/cart', isAuthenticated, function(req, res) {
 	var uid = req.user.uid;
 	if (req.user.role) {
-		order.listCartByUid(uid, function(err, books) {
-			if (err) {
-				console.log('[error] - : ' + err);
-			} else {
-				res.render('cart', {
-					title: 'Shopping Cart',
-					navbar: [{hp:'',as:'',cu:'',mp:'',sc:'active',ru:'',ul:'',am:''}],
-					js: '/javascripts/cart.js',
-					books: books
-				});
+		if (!req.query.page) {
+			var page = 1;
+		} else {
+			var page = req.query.page;
+		}
+		then(function(defer) {
+			order.countCartByUid(uid, function(err, pages) {
+				defer(err, pages);
+			});
+		}).then(function(defer, pages) {
+			if (page < 1) {
+				page = 1;
+			} else if (page > pages && pages != 0) {
+				page = pages;
 			}
+			order.listCartByUid(uid, page, function(err, books) {
+				if (err) {
+					console.log('[error] - : ' + err);
+				} else {
+					res.render('cart', {
+						title: 'Shopping Cart',
+						navbar: [{hp:'',as:'',cu:'',mp:'',sc:'active',ru:'',ul:'',am:''}],
+						js: '/javascripts/cart.js',
+						books: books,
+						pages: pages,
+						page: page
+					});
+				}
+			});
 		});
 	} else {
 		req.flash('failMsg', 'You cannot access that page.');
@@ -136,17 +173,37 @@ router.get('/record', isAuthenticated, function(req, res) {
 	if (!req.user.role) {
 		var key = req.query.key;
 		var content = req.query.content;
-		order.listRecordFromAdmin(key, content, function(err, records) {
-			if (err) {
-				console.log('[error] - : ' + err);
-			} else {
-				res.render('admin', {
-					title: 'Welcome '+req.user.username,
-					navbar: [{hp:'',as:'',cu:'',mp:'',sc:'',ru:'',ul:'',am:'active'}],
-					js: '/javascripts/admin.js',
-					records: records
-				});
+		if (!req.query.page) {
+			var page = 1;
+		} else {
+			var page = req.query.page;
+		}
+		then(function(defer) {
+			order.countRecordFromAdmin(key, content, function(err, pages) {
+				defer(err, pages);
+			});
+		}).then(function(defer, pages) {
+			if (page < 1) {
+				page = 1;
+			} else if (page > pages && pages != 0) {
+				page = pages;
 			}
+			order.listRecordFromAdmin(key, content, page, function(err, records) {
+				if (err) {
+					console.log('[error] - : ' + err);
+				} else {
+					res.render('admin', {
+						title: 'Welcome '+req.user.username,
+						navbar: [{hp:'',as:'',cu:'',mp:'',sc:'',ru:'',ul:'',am:'active'}],
+						js: '/javascripts/admin.js',
+						records: records,
+						key: key,
+						content: content,
+						pages: pages,
+						page: page
+					});
+				}
+			});
 		});
 	} else {
 		req.flash('failMsg', 'You cannot access that page.');

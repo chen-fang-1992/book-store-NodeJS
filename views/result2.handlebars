@@ -25,6 +25,10 @@
 				{{/each}}
 			</tbody>
 		</table>
+		{{>pager}}
+		<input id="btitle" type="hidden" value="{{btitle}}">
+		<input id="author" type="hidden" value="{{author}}">
+		<input id="type" type="hidden" value="{{type}}">
 		{{else}}
 		<div class="panel-body">
 			<div class="row">

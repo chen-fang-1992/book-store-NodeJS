@@ -1,26 +1,13 @@
 $(document).ready(function() {
-	if ($("div.alert-danger span").text() != "") {
-		$("div.alert-danger").removeClass("hidden").slideDown();
-	}
-
-	$("li a.btn-link").click(function() {
-		$(".placeholder").text($(this).text());
-	});
-
-	$("button.btn-success").click(function() {
-		var url = "/user/record";
-		var key = $(".placeholder").text();
-		var content = $("input").val();
-		if (content == "") {
-			alert("Please input content ...");
-		} else {
-			url = url + "?key=" + key + "&content=" + content;
-			document.location.href = url;
-		}
+	$("tbody a.btn").click(function() {
+		var url = "/search/detail";
+		var bid = $(this).parent().siblings("input:hidden").val();
+		url = url + "?bid=" + bid;
+		document.location.href = url;
 	});
 
 	$("li.previous").click(function() {
-		var url = "/user/record";
+		var url = "/search/result";
 		var key = $("#key").val();
 		var content = $("#content").val();
 		if (Number($("#page").val()) <= 1) {
@@ -33,7 +20,7 @@ $(document).ready(function() {
 	});
 
 	$("li.next").click(function() {
-		var url = "/user/record";
+		var url = "/search/result";
 		var key = $("#key").val();
 		var content = $("#content").val();
 		if (Number($("#page").val()) >= Number($("#pages").val())) {
