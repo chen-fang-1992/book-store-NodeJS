@@ -43,242 +43,257 @@ const LIST_RECORD_BY_TITLE = "SELECT USERS.USERNAME AS username,BOOKS.TITLE AS t
 
 function DB() {};
 
-DB.con = function() {
-	this.connection = db.createConnection({
-		host: "localhost",
-		user: "root",
-		password: "",
-		port: "3306",
-		database: "book_store"
-	});
-	this.connection.connect();
-};
-
-DB.end = function() {
-	this.connection.end();
-};
+var pool = db.createPool({
+	host: "localhost",
+	user: "root",
+	password: "",
+	port: "3306",
+	database: "book_store",
+	connnectionLimit: 10
+});
 
 DB.listBookByRecommend = function(callback) {
-	this.con();
-	this.connection.query(LIST_BOOK_BY_RECOMMEND, function(err, books) {
-		callback(err, books);
+	pool.getConnection(function(err, conn) {
+		conn.query(LIST_BOOK_BY_RECOMMEND, function(err, books) {
+			callback(err, books);
+		});
+		conn.release();
 	});
-	this.end();
 };
 
 DB.countPagesOfBookFromHome = function(key, content, callback) {
-	this.con();
-	switch (key) {
-		case "Title":
-			this.connection.query(COUNT_BOOK_BY_TITLE, content, function(err, num) {
-				callback(err, Math.ceil(num[0].num/7));
-			});
-			break;
-		case "Author":
-			this.connection.query(COUNT_BOOK_BY_AUTHOR, content, function(err, num) {
-				callback(err, Math.ceil(num[0].num/7));
-			});
-			break;
-		case "Type":
-			this.connection.query(COUNT_BOOK_BY_TYPE, content, function(err, num) {
-				callback(err, Math.ceil(num[0].num/7));
-			});
-			break;
-	}
-	this.end();
+	pool.getConnection(function(err, conn) {
+		switch (key) {
+			case "Title":
+				conn.query(COUNT_BOOK_BY_TITLE, content, function(err, num) {
+					callback(err, Math.ceil(num[0].num/7));
+				});
+				break;
+			case "Author":
+				conn.query(COUNT_BOOK_BY_AUTHOR, content, function(err, num) {
+					callback(err, Math.ceil(num[0].num/7));
+				});
+				break;
+			case "Type":
+				conn.query(COUNT_BOOK_BY_TYPE, content, function(err, num) {
+					callback(err, Math.ceil(num[0].num/7));
+				});
+				break;
+		}
+		conn.release();
+	});
 };
 
 DB.findBookFromHome = function(key, content, page, callback) {
-	page = (page - 1) * 7;
-	this.con();
-	switch (key) {
-		case "Title":
-			this.connection.query(FIND_BOOK_BY_TITLE+page+",7", content, function(err, books) {
-				callback(err, books);
-			});
-			break;
-		case "Author":
-			this.connection.query(FIND_BOOK_BY_AUTHOR+page+",7", content, function(err, books) {
-				callback(err, books);
-			});
-			break;
-		case "Type":
-			this.connection.query(FIND_BOOK_BY_TYPE+page+",7", content, function(err, books) {
-				callback(err, books);
-			});
-			break;
-	}
-	this.end();
+	pool.getConnection(function(err, conn) {
+		page = (page - 1) * 7;
+		switch (key) {
+			case "Title":
+				conn.query(FIND_BOOK_BY_TITLE+page+",7", content, function(err, books) {
+					callback(err, books);
+				});
+				break;
+			case "Author":
+				conn.query(FIND_BOOK_BY_AUTHOR+page+",7", content, function(err, books) {
+					callback(err, books);
+				});
+				break;
+			case "Type":
+				conn.query(FIND_BOOK_BY_TYPE+page+",7", content, function(err, books) {
+					callback(err, books);
+				});
+				break;
+		}
+		conn.release();
+	});
 };
 
 DB.findBookById = function(id, callback) {
-	this.con();
-	this.connection.query(FIND_BOOK_BY_ID, id, function(err, books) {
-		callback(err, books[0]);
+	pool.getConnection(function(err, conn) {
+		conn.query(FIND_BOOK_BY_ID, id, function(err, books) {
+			callback(err, books[0]);
+		});
+		conn.release();
 	});
-	this.end();
 };
 
 DB.countPagesOfBookFromAdvanced = function(title, author, type, callback) {
-	this.con();
-	this.connection.query(COUNT_BOOK_BY_ADVANCED, [title, author, type], function(err, num) {
-		callback(err, Math.ceil(num[0].num/7));
+	pool.getConnection(function(err, conn) {
+		conn.query(COUNT_BOOK_BY_ADVANCED, [title, author, type], function(err, num) {
+			callback(err, Math.ceil(num[0].num/7));
+		});
+		conn.release();
 	});
-	this.end();
 };
 
 DB.findBookFromAdvanced = function(title, author, type, page, callback) {
-	page = (page - 1) * 7;
-	this.con();
-	this.connection.query(FIND_BOOK_BY_ADVANCED+page+",7", [title, author, type], function(err, books) {
-		callback(err, books);
+	pool.getConnection(function(err, conn) {
+		page = (page - 1) * 7;
+		conn.query(FIND_BOOK_BY_ADVANCED+page+",7", [title, author, type], function(err, books) {
+			callback(err, books);
+		});
+		conn.release();
 	});
-	this.end();
 };
 
 DB.register = function(username, password, email, callback) {
-	this.con();
-	this.connection.query(ADD_USER, [username, password, email], function(err) {
-		callback(err, "success");
+	pool.getConnection(function(err, conn) {
+		conn.query(ADD_USER, [username, password, email], function(err) {
+			callback(err, "success");
+		});
+		conn.release();
 	});
-	this.end();
 };
 
 DB.authenticateUsername = function(username, callback) {
-	this.con();
-	this.connection.query(AUTHENTICATE_USERNAME, username, function(err, users) {
-		if (users[0]) {
-			callback(err, "fail");
-		} else {
-			callback(err, "success");
-		}
+	pool.getConnection(function(err, conn) {
+		conn.query(AUTHENTICATE_USERNAME, username, function(err, users) {
+			if (users[0]) {
+				callback(err, "fail");
+			} else {
+				callback(err, "success");
+			}
+		});
+		conn.release();
 	});
-	this.end();
 };
 
 DB.authenticateLogin = function(username, password, callback) {
-	this.con();
-	this.connection.query(AUTHENTICATE_LOGIN, [username, password], function(err, users) {
-		callback(err, users[0]);
+	pool.getConnection(function(err, conn) {
+		conn.query(AUTHENTICATE_LOGIN, [username, password], function(err, users) {
+			callback(err, users[0]);
+		});
+		conn.release();
 	});
-	this.end();
 };
 
 DB.findUserByUid = function(uid, callback) {
-	this.con();
-	this.connection.query(FIND_USER_BY_UID, uid, function(err, users) {
-		callback(err, users[0]);
+	pool.getConnection(function(err, conn) {
+		conn.query(FIND_USER_BY_UID, uid, function(err, users) {
+			callback(err, users[0]);
+		});
+		conn.release();
 	});
-	this.end();
 };
 
 DB.addCart = function(uid, bid, callback) {
-	this.con();
-	this.connection.query(ADD_CART, [uid, bid, 1], function(err) {
-		callback(err);
+	pool.getConnection(function(err, conn) {
+		conn.query(ADD_CART, [uid, bid, 1], function(err) {
+			callback(err);
+		});
+		conn.release();
 	});
-	this.end();
 };
 
 DB.removeCart = function(uid, bid, callback) {
-	this.con();
-	this.connection.query(REMOVE_CART, [uid, bid], function(err) {
-		callback(err);
+	pool.getConnection(function(err, conn) {
+		conn.query(REMOVE_CART, [uid, bid], function(err) {
+			callback(err);
+		});
+		conn.release();
 	});
-	this.end();
 };
 
 DB.updateCart = function(uid, bid, number, callback) {
-	this.con();
-	this.connection.query(UPDATE_CART, [number, uid, bid], function(err) {
-		callback(err);
+	pool.getConnection(function(err, conn) {
+		conn.query(UPDATE_CART, [number, uid, bid], function(err) {
+			callback(err);
+		});
+		conn.release();
 	});
-	this.end();
 };
 
 DB.findCart = function(uid, bid, callback) {
-	this.con();
-	this.connection.query(FIND_CART, [uid, bid], function(err, carts) {
-		callback(err, carts[0]);
+	pool.getConnection(function(err, conn) {
+		conn.query(FIND_CART, [uid, bid], function(err, carts) {
+			callback(err, carts[0]);
+		});
+		conn.release();
 	});
-	this.end();
 };
 
 DB.countCartByUid = function(uid, callback) {
-	this.con();
-	this.connection.query(COUNT_CART_BY_UID, uid, function(err, num) {
-		callback(err, Math.ceil(num[0].num/5));
+	pool.getConnection(function(err, conn) {
+		conn.query(COUNT_CART_BY_UID, uid, function(err, num) {
+			callback(err, Math.ceil(num[0].num/5));
+		});
+		conn.release();
 	});
-	this.end();
 };
 
 DB.listCartByUid = function(uid, page, callback) {
-	page = (page - 1) * 5;
-	this.con();
-	this.connection.query(LIST_CART_BY_UID+page+",5", uid, function(err, books) {
-		callback(err, books);
+	pool.getConnection(function(err, conn) {
+		page = (page - 1) * 5;
+		conn.query(LIST_CART_BY_UID+page+",5", uid, function(err, books) {
+			callback(err, books);
+		});
+		conn.release();
 	});
-	this.end();
 };
 
 DB.addRecord = function(uid, bid, action, callback) {
-	this.con();
-	this.connection.query(ADD_RECORD, [uid, bid, action], function(err) {
-		callback(err);
+	pool.getConnection(function(err, conn) {
+		conn.query(ADD_RECORD, [uid, bid, action], function(err) {
+			callback(err);
+		});
+		conn.release();
 	});
-	this.end();
 };
 
 DB.countRecordByUid = function(uid, callback) {
-	this.con();
-	this.connection.query(COUNT_RECORD_BY_UID, uid, function(err, num) {
-		callback(err, Math.ceil(num[0].num/5));
+	pool.getConnection(function(err, conn) {
+		conn.query(COUNT_RECORD_BY_UID, uid, function(err, num) {
+			callback(err, Math.ceil(num[0].num/5));
+		});
+		conn.release();
 	});
-	this.end();
 };
 
 DB.listRecordByUid = function(uid, page, callback) {
-	page = (page - 1) * 5;
-	this.con();
-	this.connection.query(LIST_RECORD_BY_UID+page+",5", uid, function(err, records) {
-		callback(err, records);
+	pool.getConnection(function(err, conn) {
+		page = (page - 1) * 5;
+		conn.query(LIST_RECORD_BY_UID+page+",5", uid, function(err, records) {
+			callback(err, records);
+		});
+		conn.release();
 	});
-	this.end();
 };
 
 DB.countRecordFromAdmin = function(key, content, callback) {
-	this.con();
-	switch (key) {
-		case "User Name":
-			this.connection.query(COUNT_RECORD_BY_USERNAME, content, function(err, num) {
-				callback(err, Math.ceil(num[0].num/5));
-			});
-			break;
-		case "Book Title":
-			this.connection.query(COUNT_RECORD_BY_TITLE, content, function(err, num) {
-				callback(err, Math.ceil(num[0].num/5));
-			});
-			break;
-	}
-	this.end();
+	pool.getConnection(function(err, conn) {
+		switch (key) {
+			case "User Name":
+				conn.query(COUNT_RECORD_BY_USERNAME, content, function(err, num) {
+					callback(err, Math.ceil(num[0].num/5));
+				});
+				break;
+			case "Book Title":
+				conn.query(COUNT_RECORD_BY_TITLE, content, function(err, num) {
+					callback(err, Math.ceil(num[0].num/5));
+				});
+				break;
+		}
+		conn.release();
+	});
 };
 
 DB.listRecordFromAdmin = function(key, content, page, callback) {
-	page = (page - 1) * 5;
-	this.con();
-	switch (key) {
-		case "User Name":
-			this.connection.query(LIST_RECORD_BY_USERNAME+page+",5", content, function(err, records) {
-				callback(err, records);
-			});
-			break;
-		case "Book Title":
-			this.connection.query(LIST_RECORD_BY_TITLE+page+",5", content, function(err, records) {
-				callback(err, records);
-			});
-			break;
-	}
-	this.end();
+	pool.getConnection(function(err, conn) {
+		page = (page - 1) * 5;
+		switch (key) {
+			case "User Name":
+				conn.query(LIST_RECORD_BY_USERNAME+page+",5", content, function(err, records) {
+					callback(err, records);
+				});
+				break;
+			case "Book Title":
+				conn.query(LIST_RECORD_BY_TITLE+page+",5", content, function(err, records) {
+					callback(err, records);
+				});
+				break;
+		}
+		conn.release();
+	});
 };
 
 module.exports = DB;
