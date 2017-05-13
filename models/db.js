@@ -43,21 +43,12 @@ const LIST_RECORD_BY_TITLE = "SELECT USERS.USERNAME AS username,BOOKS.TITLE AS t
 
 function DB() {};
 
-// var pool = db.createPool({
-// 	host: "localhost",
-// 	user: "root",
-// 	password: "",
-// 	port: "3306",
-// 	database: "book_store",
-// 	connnectionLimit: 10
-// });
-
 var pool = db.createPool({
-	host: "us-cdbr-iron-east-03.cleardb.net",
-	user: "b0315adacd501c",
-	password: "01ee67e3",
+	host: "localhost",
+	user: "root",
+	password: "",
 	port: "3306",
-	database: "heroku_ce4494ab45db41a",
+	database: "book_store",
 	connnectionLimit: 10
 });
 
